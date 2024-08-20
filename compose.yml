@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  db-auth-service:
+    image: postgres
+    ports:
+      - "5434:5432"
+    restart: always
+    environment:
+      - POSTGRES_USER=auth_service
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=auth_db
+  auth-service:
+    build: .
+    container_name: auth_service
+    ports:
+      - "8280:3000"
+    depends_on:
+      - db-auth-service
+    links:
+      - db-auth-service
+    env_file:
+      - .env.dev
